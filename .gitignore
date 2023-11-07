@@ -1,0 +1,101 @@
+# macOS
+.DS_Store
+
+# Unity
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Pp]rojectSettings/
+_Source_Files/
+
+
+# User-specific files
+[Uu]ser[Ll]ist/
+[Uu]ser[Ss]ettings/
+
+# Visual Studio Code
+.vscode/
+
+# Rider
+.idea/
+
+# macOS metadata files
+._*
+
+# Windows Thumbs.db files
+[Tt]humbs.db
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Recycle Bin used on USB sticks
+[Ss]ystem [Vv]olume [Ii]nformation/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+# JetBrains Rider
+.idea/
+
+# Rider
+.idea/
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Mono Auto Generated Files
+mono_crash.*
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin
+$RECYCLE.BIN/
+
+# VS Code directories
+.vscode/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+*.meta
+
+# Windows shortcuts
+*.lnk
+
+# JetBrains Rider
+.idea/
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Mono Auto Generated Files
+mono_crash.*
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
