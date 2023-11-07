@@ -3,14 +3,6 @@
 
 # Unity
 [Ll]ibrary/
-# [Tt]emp/
-# [Oo]bj/
-# [Bb]uild/
-# [Bb]uilds/
-# [Ll]ogs/
-# [Pp]rojectSettings/
-# _Source_Files/
-
 
 # User-specific files
 [Uu]ser[Ll]ist/
@@ -71,16 +63,6 @@ $RECYCLE.BIN/
 # VS Code directories
 .vscode/
 
-# Windows Installer files
-*.cab
-*.msi
-*.msm
-*.msp
-*.meta
-
-# Windows shortcuts
-*.lnk
-
 # JetBrains Rider
 .idea/
 
@@ -92,10 +74,6 @@ $RECYCLE.BIN/
 
 # Mono Auto Generated Files
 mono_crash.*
-
-# Windows image file caches
-Thumbs.db
-ehthumbs.db
 
 # Folder config file
 Desktop.ini
