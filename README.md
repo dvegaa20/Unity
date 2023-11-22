@@ -4,9 +4,9 @@ Repositorio colaborativo para la realización del proyecto de la materia Modelac
 
 ## Autores
 
-- [@dembA7](https://github.com/dembA7)
-- [@Riosmena](https://github.com/Riosmena)
-- [@dvegaa20](https://github.com/dvegaa20)
+<a href="https://github.com/dvegaa20/Unity/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=dvegaa20/Unity" />
+</a>
 
 ## Descripción de la evidencia
 
