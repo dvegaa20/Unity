@@ -1,0 +1,5 @@
+{
+    "folderName": "DeliveryVehiclesPack",
+    "longVersion": "1.1.2",
+    "shortVersion": 1
+}
