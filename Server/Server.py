@@ -32,10 +32,10 @@ def run(server_class=HTTPServer, handler_class=Server, port=8585):
     logging.basicConfig(level=logging.INFO)
     server_address = ('', port)
     httpd = server_class(server_address, handler_class)
-    logging.info("Starting httpd...\n") # HTTPD is HTTP Daemon!
+    logging.info("Starting httpd...\n")
     try:
         httpd.serve_forever()
-    except KeyboardInterrupt:   # CTRL+C stops the server
+    except KeyboardInterrupt:
         pass
     httpd.server_close()
     logging.info("Stopping httpd...\n")
