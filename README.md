@@ -6,6 +6,7 @@ Repositorio colaborativo para la realización del proyecto de la materia Modelac
 
 <a href="https://github.com/dvegaa20/Unity/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=dvegaa20/Unity" />
+  <img src="https://contrib.rocks/image?repo=demba7/demba7" />
 </a>
 
 ## Descripción de la evidencia
