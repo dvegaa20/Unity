@@ -14,7 +14,6 @@ public class APIHelper : MonoBehaviour
         using (StreamReader reader = new StreamReader(response.GetResponseStream()))
         {
             string json = reader.ReadToEnd();
-            Debug.Log(json);
             return JsonUtility.FromJson<Steps>(json);
         }
     }

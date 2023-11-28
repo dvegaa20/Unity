@@ -30,5 +30,3 @@ public class GoogleMovement : MonoBehaviour
         transform.Rotate(Vector3.up, rotation);
     }
 }
-
-
