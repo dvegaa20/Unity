@@ -99,36 +99,9 @@ public class MapGenerator : MonoBehaviour
                     Debug.Log("Error: Agent type not found");
                 }
             }
-
-            if (step_count == pickingSteps[0].step)
-            {
-                food_pos =  new Vector3(pickingSteps[0].x * 10, 0, pickingSteps[0].y * 10);
-
-
-                // Find all GameObjects of a specific type
-                GameObject[] objectsOfType = GameObject.FindGameObjectsWithTag("Food");
-
-                // Loop through the found objects
-                foreach (GameObject obj in objectsOfType)
-                {
-                    // Check if the object's position matches the target position
-                    if (obj.transform.position == food_pos)
-                    {
-                        // Destroy the found object
-                        Destroy(obj);
-                    }
-                }
-            }
+            
             Debug.Log("Step: " + step_count);
             step_count++;
-        }
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Food"))
-        {
-            Destroy(other.gameObject);
         }
     }
 }
