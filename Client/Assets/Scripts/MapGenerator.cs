@@ -17,6 +17,7 @@ public class MapGenerator : MonoBehaviour
     public float x;
     public float y;
     public float z;
+    public Vector3 food_pos;
 
     void Start()
     {
@@ -24,7 +25,7 @@ public class MapGenerator : MonoBehaviour
         apiHelper = new APIHelper();
         Steps stepsData = apiHelper.Start();
         List<Step> steps = stepsData.steps;
-
+        List<PickingSteps> pickingSteps = stepsData.picking_steps;
         DepositLocation depositLocation = stepsData.deposit_location;
 
         x = depositLocation.x;
@@ -62,24 +63,27 @@ public class MapGenerator : MonoBehaviour
             }
         }
 
-        foreach (Food food in firstStep.food)
-        {
-            x = food.x;
-            z = food.y;
-            spawnPosition = new Vector3(x * 10, 0, z * 10);
-            spawnRotation = Quaternion.Euler(0f, 0f, 0f);
-            GameObject newFood = Instantiate(this.food, spawnPosition, spawnRotation, Objects);
+        foreach(Step step in steps){
+            foreach (Food food in step.food)
+            {
+                x = food.x;
+                z = food.y;
+                spawnPosition = new Vector3(x * 10, 0, z * 10);
+                spawnRotation = Quaternion.Euler(0f, 0f, 0f);
+                GameObject newFood = Instantiate(this.food, spawnPosition, spawnRotation, Objects);
+            }
         }
 
-        StartCoroutine(UpdateAgents(steps));
+        StartCoroutine(UpdateAgents(steps, pickingSteps));
 
     }
 
-    IEnumerator UpdateAgents(List<Step> steps)
+    IEnumerator UpdateAgents(List<Step> steps, List<PickingSteps> pickingSteps)
     {
+        int step_count = 0;
         foreach (Step step in steps)
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.5f);
             GameObject[] gos;
             foreach (Agent agent in step.agents)
             {
@@ -95,6 +99,36 @@ public class MapGenerator : MonoBehaviour
                     Debug.Log("Error: Agent type not found");
                 }
             }
+
+            if (step_count == pickingSteps[0].step)
+            {
+                food_pos =  new Vector3(pickingSteps[0].x * 10, 0, pickingSteps[0].y * 10);
+
+
+                // Find all GameObjects of a specific type
+                GameObject[] objectsOfType = GameObject.FindGameObjectsWithTag("Food");
+
+                // Loop through the found objects
+                foreach (GameObject obj in objectsOfType)
+                {
+                    // Check if the object's position matches the target position
+                    if (obj.transform.position == food_pos)
+                    {
+                        // Destroy the found object
+                        Destroy(obj);
+                    }
+                }
+            }
+            Debug.Log("Step: " + step_count);
+            step_count++;
+        }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Food"))
+        {
+            Destroy(other.gameObject);
         }
     }
 }

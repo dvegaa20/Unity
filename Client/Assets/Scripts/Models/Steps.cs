@@ -4,8 +4,9 @@ using System.Collections.Generic;
 
 public class Steps {
 
-    public List<Step> steps;
     public DepositLocation deposit_location;
+    public List<Step> steps;
+    public List<PickingSteps> picking_steps;
 
 }
 
@@ -38,4 +39,14 @@ public class DepositLocation
 {
     public float x;
     public float y;
+}
+
+[System.Serializable]
+public class PickingSteps
+{
+    public int id_collector;
+    public float x;
+    public float y;
+    public float step;
+    public bool picked;
 }
