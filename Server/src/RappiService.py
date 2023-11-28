@@ -8,6 +8,9 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from matplotlib.animation import FuncAnimation
 
+plt.rcParams["animation.html"] = "jshtml"
+matplotlib.rcParams['animation.embed_limit'] = 2**128
+
 import random
 import numpy as np
 import pandas as pd
@@ -19,31 +22,33 @@ class Rappi(Agent):
         self.id = unique_id
         self.is_carrying_food = False
         self.previous_pos = None
+        self.random.seed(12345)
+
 
     def move_to_food(self):
-        if self.can_pick() == False:
+        if not self.can_pick():
             return
-        
+
         target_pos = self.find_closest_food()
-        neighborhood = self.model.grid.get_neighborhood(self.pos, moore=True, include_center=True, radius=1)
+        neighborhood = self.model.grid.get_neighborhood(self.pos, moore=True, include_center=True)
 
         if self.pos == target_pos:
             self.pick_food()
             return
-        
+
         self.move(target_pos, neighborhood)
 
     def move_to_deposit(self):
-        if self.can_drop() == False:
+        if not self.can_drop():
             return
 
         target_pos = self.model.deposit_pos
-        neighborhood = self.model.grid.get_neighborhood(self.pos, moore=True, include_center=True, radius=1)
+        neighborhood = self.model.grid.get_neighborhood(self.pos, moore=True, include_center=True)
 
         if self.pos == target_pos:
             self.drop_food()
             return
-        
+
         self.move(target_pos, neighborhood)
 
     def pick_food(self):
@@ -51,6 +56,13 @@ class Rappi(Agent):
         self.model.known_food_layer[x][y] = 0
         self.model.food_layer[x][y] = 0
         self.is_carrying_food = True
+        self.model.picking_steps.append({
+            "id_collector": self.unique_id[1],
+            "x": x,
+            "y": y,
+            "step": self.model.schedule.steps,
+            "picked": True
+        })
 
     def drop_food(self):
         self.is_carrying_food = False
@@ -58,10 +70,14 @@ class Rappi(Agent):
         self.move_randomly()
 
     def move_randomly(self):
-        neighborhood = self.model.grid.get_neighborhood(
-            self.pos, moore=True, include_center=False, radius=1
-        )
-        self.move(self.random.choice(neighborhood), neighborhood)
+        neighborhood = self.model.grid.get_neighborhood(self.pos, moore=True, include_center=False)
+        empty_neighbors = [cell for cell in neighborhood if self.model.grid.is_cell_empty(cell)]
+        
+        if empty_neighbors:
+            new_pos = self.random.choice(empty_neighbors)
+            self.model.grid.move_agent(self, new_pos)
+            self.pos = new_pos
+
 
     def move(self, target_pos, neighborhood):
         x = target_pos[0] - self.pos[0]
@@ -95,22 +111,10 @@ class Rappi(Agent):
             self.model.deposit_pos = (x, y)
 
     def find_closest_food(self):
-        food_poss = []
-
-        for i in range(self.model.grid.width):
-            for j in range(self.model.grid.height):
-                if self.model.known_food_layer[i][j] == 1:
-                    food_poss.append((i, j))
-
-        closest_food = None
-        closest_distance = 1000000
-
-        for food_pos in food_poss:
-            distance = self.calculate_distance(food_pos)
-            if distance < closest_distance:
-                closest_food = food_pos
-                closest_distance = distance
-        return closest_food
+        food_poss = np.argwhere(self.model.known_food_layer == 1)
+        distances = np.abs(food_poss - np.array(self.pos)).sum(axis=1)
+        closest_food_index = np.argmin(distances)
+        return tuple(food_poss[closest_food_index])
     
     def calculate_distance(self, position):
         return abs(self.pos[0] - position[0]) + abs(self.pos[1] - position[1])
@@ -134,6 +138,7 @@ class Rappi(Agent):
 
         self.move_to_food()
         self.move_to_deposit()
+
 
 class GoogleMaps(Agent):
     def __init__(self, unique_id, model):
@@ -186,22 +191,10 @@ def get_agent_positions(model):
 
 class RappiDelivery(Model):
 
-    __slots__ = (
-        "schedule",
-        "grid",
-        "running",
-        "food_layer",
-        "known_food_layer",
-        "deposit_location",
-        "datacollector",
-    )
-
     def __init__(self, width, height, num_agents, max_food = 47):
         self.schedule = SimultaneousActivation(self)
         self.grid = SingleGrid(width, height, torus=False)
         self.running = True
-
-        self.random.seed(12345)
         self.datacollector = DataCollector(
             {
                 "Food": lambda m: np.sum(m.food_layer),
@@ -215,6 +208,7 @@ class RappiDelivery(Model):
 
         self.total_food_spawned = 0
         self.picked_food_positions = set()
+        self.picking_steps = []
         self.init_food_layer = np.zeros((width, height), dtype=np.int8)
         self.food_layer = np.zeros((width, height), dtype=np.int8)
         self.known_food_layer = np.zeros((width, height), dtype=np.int8)
@@ -222,6 +216,8 @@ class RappiDelivery(Model):
         self.deposit_location = None
         self.deposited_food = 0
         self.num_food = max_food
+        self.random.seed(12345)
+
 
         self.spawn_food(self.num_food)
         self.spawn_deposit()
@@ -322,37 +318,6 @@ NUM_AGENTS = 5
 MAX_FOOD = 47
 
 FOOD_SPAWN_INTERVAL = 5
-MIN_FOOD_PER_SPAWN = 2
-MAX_FOOD_PER_SPAWN = 5
-
-def plot_simulation(model, title, figsize=(10, 10), cmap="binary"):
-
-    data = model.food_layer.copy()
-
-    plt.figure(figsize=figsize)
-
-    deposit_x, deposit_y = model.deposit_location
-    plt.scatter(
-        deposit_y, deposit_x, color="black", marker="s", s=50, label="Deposit"
-    )
-
-    food_layer = model.init_food_layer
-    for i in range(len(food_layer)):
-        for j in range(len(food_layer[0])):
-            box_color = "black" if food_layer[i][j] > 0 else "blue"
-
-            plt.text(j, i, food_layer[i][j], ha="center", va="center", color=box_color)
-
-    plt.title(title, fontsize=16, fontweight="bold")
-    plt.legend(loc="lower right", bbox_to_anchor=(1, 1), fontsize=12)
-
-    plt.xlabel("aisle", fontsize=14)
-    plt.ylabel("shelf", fontsize=14)
-
-    ax = plt.gca()
-    ax.set_aspect("equal", adjustable="box")
-
-    plt.show()
 
 def get_data(model):
 
@@ -377,48 +342,42 @@ def animate_simulation(model):
     fig, ax = plt.subplots(figsize=(10, 10))
     plt.close()
 
-    ax.set_xlim(0, 20)
-    ax.set_ylim(0, 20)
-
-    ax.set_aspect("equal", adjustable="box")
-    ax.set_title("Rappi Service", fontsize=16, fontweight="bold")
+    rappi_color = "red"
+    googlemaps_color = "green"
 
     deposit_x, deposit_y = data["deposit_location"].values()
-    ax.scatter(
-        deposit_y, deposit_x, color="black", marker="s", s=50, label="deposit"
-    )
-
-    deposit_label = ax.text(
-        deposit_y, deposit_x, "", ha="right", va="bottom", color="black"
-    )
+    ax.scatter(deposit_y, deposit_x, color="black", marker="D", s=50, label="deposit")
+    agents_rappi = ax.scatter([], [], color=rappi_color, marker="*", s=50, label="Rappi")
+    agents_googlemaps = ax.scatter([], [], color=googlemaps_color, marker="8", s=50, label="GoogleMaps")
 
     food_layer = np.array(model.init_food_layer)
-    food = ax.imshow(food_layer, cmap="binary")
-
-    agents = ax.scatter([], [], color="blue", marker="X", s=50, label="Agents")
+    food = ax.imshow(food_layer, cmap="cool")
 
     def init():
-        return (food, agents)
+        return (food, agents_rappi, agents_googlemaps)
     
     def update(frame):
         agent_positions = frame["agents"]
 
-        for agent in agent_positions:
+        rappi_positions = [agent for agent in agent_positions if agent["type"] == "Rappi"]
+        googlemaps_positions = [agent for agent in agent_positions if agent["type"] == "GoogleMaps"]
+
+        for agent in rappi_positions:
             x, y = agent["x"], agent["y"]
             if food_layer[x, y] > 0:
                 food_layer[x, y] = 0
 
         food.set_data(food_layer)
 
-        x = [agent["x"] for agent in agent_positions]
-        y = [agent["y"] for agent in agent_positions]
+        x_rappi = [agent["x"] for agent in rappi_positions]
+        y_rappi = [agent["y"] for agent in rappi_positions]
+        agents_rappi.set_offsets(np.c_[x_rappi, y_rappi])
 
-        agents.set_offsets(np.c_[x, y])
+        x_googlemaps = [agent["x"] for agent in googlemaps_positions]
+        y_googlemaps = [agent["y"] for agent in googlemaps_positions]
+        agents_googlemaps.set_offsets(np.c_[x_googlemaps, y_googlemaps])
 
-        deposit_food_count = model.deposited_food
-        deposit_label.set_text(f"DEPOSIT")
-
-        return (food, agents)
+        return (food, agents_rappi, agents_googlemaps)
     
     return FuncAnimation(fig, update, frames=data["steps"], init_func=init, blit=True)
 
