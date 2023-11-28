@@ -333,6 +333,7 @@ def get_data(model):
     return {
         "deposit_location": deposit_location,
         "steps": steps,
+        "picking_steps": model.picking_steps,
         "total_steps": model.schedule.steps,
     }
 
@@ -390,7 +391,15 @@ def run_simulation() -> Model:
     print(f"Simulation finished in {model.schedule.steps} steps")
     return model
 
-model = run_simulation()
+def main():
+    model = run_simulation()
+    data = get_data(model)
+    return data
 
-anim = animate_simulation(model)
-anim
+if __name__ == "__main__":
+    main()
+
+# model = run_simulation()
+
+# anim = animate_simulation(model)
+# anim

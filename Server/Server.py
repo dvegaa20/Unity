@@ -5,17 +5,21 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import logging
 import json
+import argparse
+from src.RappiService import main
 
 class Server(BaseHTTPRequestHandler):
     
     def _set_response(self):
         self.send_response(200)
-        self.send_header('Content-type', 'text/html')
+        self.send_header('Content-type', 'application/json')
         self.end_headers()
         
     def do_GET(self):
+        data = main()
+        json_data = json.dumps(data)
         self._set_response()
-        self.wfile.write("GET request for {}".format(self.path).encode('utf-8'))
+        self.wfile.write(json_data.encode('utf-8'))
 
     def do_POST(self):
         position = {
@@ -41,12 +45,10 @@ def run(server_class=HTTPServer, handler_class=Server, port=8585):
     logging.info("Stopping httpd...\n")
 
 if __name__ == '__main__':
-    from sys import argv
-    
-    if len(argv) == 2:
-        run(port=int(argv[1]))
-    else:
-        run()
+    parser = argparse.ArgumentParser(description='Server to interact with Unity via POST')
 
+    parser.add_argument('-p', '--port', type=int, default=8585, help='Port to run the server on')
 
+    args = parser.parse_args()
 
+    run(port=args.port)
