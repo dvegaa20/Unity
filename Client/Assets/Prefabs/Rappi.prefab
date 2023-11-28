@@ -594,7 +594,7 @@ GameObject:
   - component: {fileID: 1393477102337989744}
   - component: {fileID: 5859930105042654988}
   m_Layer: 0
-  m_Name: Vehicle01_Vespa
+  m_Name: Rappi
   m_TagString: Rappi
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -181,7 +181,7 @@ GameObject:
   - component: {fileID: -2470513316229160661}
   - component: {fileID: 658463439683924461}
   m_Layer: 0
-  m_Name: ambulance
+  m_Name: Google Maps
   m_TagString: Google
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

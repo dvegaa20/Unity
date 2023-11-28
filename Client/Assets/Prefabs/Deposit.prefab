@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5935259518305911522}
   - component: {fileID: 1510927124783709312}
   m_Layer: 0
-  m_Name: Baker_house
+  m_Name: Deposit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
