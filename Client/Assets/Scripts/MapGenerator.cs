@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class MapGenerator : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class MapGenerator : MonoBehaviour
     public GameObject deposit;
     private APIHelper apiHelper;
     public Transform Objects;
+    public TextMeshProUGUI stepTextMesh;
 
     [Header("Variables")]
     public float x;
@@ -83,7 +85,7 @@ public class MapGenerator : MonoBehaviour
         int step_count = 0;
         foreach (Step step in steps)
         {
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.25f);
             GameObject[] gos;
             foreach (Agent agent in step.agents)
             {
@@ -99,7 +101,6 @@ public class MapGenerator : MonoBehaviour
                     Debug.Log("Error: Agent type not found");
                 }
             }
-            
             Debug.Log("Step: " + step_count);
             step_count++;
         }
