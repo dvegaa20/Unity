@@ -44,6 +44,8 @@ public class MapGenerator : MonoBehaviour
                 spawnPosition = new Vector3(x * 10, 0, z * 10);
                 spawnRotation = Quaternion.Euler(0f, 0f, 0f);
                 GameObject newRappi = Instantiate(this.rappi, spawnPosition, spawnRotation, Objects);
+                newRappi.tag = agent.id;
+                
             }
             else if (agent.type == "GoogleMaps")
             {
@@ -52,6 +54,7 @@ public class MapGenerator : MonoBehaviour
                 spawnPosition = new Vector3(x * 10, 0, z * 10);
                 spawnRotation = Quaternion.Euler(0f, 0f, 0f);
                 GameObject newGoogleMaps = Instantiate(this.googleMaps, spawnPosition, spawnRotation, Objects);
+                newGoogleMaps.tag = agent.id;
             }
             else
             {
@@ -68,5 +71,30 @@ public class MapGenerator : MonoBehaviour
             GameObject newFood = Instantiate(this.food, spawnPosition, spawnRotation, Objects);
         }
 
+        StartCoroutine(UpdateAgents(steps));
+
+    }
+
+    IEnumerator UpdateAgents(List<Step> steps)
+    {
+        foreach (Step step in steps)
+        {
+            yield return new WaitForSeconds(1f);
+            GameObject[] gos;
+            foreach (Agent agent in step.agents)
+            {
+                x = agent.x;
+                z = agent.y;
+                gos = GameObject.FindGameObjectsWithTag(agent.id);
+                if (gos != null)
+                {
+                    gos[0].transform.position = new Vector3(x * 10, 0, z * 10);
+                }
+                else
+                {
+                    Debug.Log("Error: Agent type not found");
+                }
+            }
+        }
     }
 }
