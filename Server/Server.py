@@ -46,9 +46,6 @@ def run(server_class=HTTPServer, handler_class=Server, port=8585):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Server to interact with Unity via POST')
-
     parser.add_argument('-p', '--port', type=int, default=8585, help='Port to run the server on')
-
     args = parser.parse_args()
-
     run(port=args.port)
