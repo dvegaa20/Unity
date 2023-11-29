@@ -250,7 +250,7 @@ class RappiDelivery(Model):
         ]
 
         num_food = min(
-            self.random.randrange(2, 6),
+            self.random.randrange(2, 5),
             max_food - self.total_food_spawned,
             len(available_cells),
         )

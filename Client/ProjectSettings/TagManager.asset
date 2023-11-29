@@ -7,6 +7,13 @@ TagManager:
   - Wall
   - Google
   - Rappi
+  - Agent
+  - Rappi0
+  - Rappi1
+  - Rappi2
+  - GoogleMaps0
+  - GoogleMaps1
+  - Food
   layers:
   - Default
   - TransparentFX
