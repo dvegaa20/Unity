@@ -8,6 +8,7 @@ public class APIHelper : MonoBehaviour
 {
     public Steps Start()
     {
+        Debug.Log("Fetching API data...");
         HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://localhost:8585");
         HttpWebResponse response = (HttpWebResponse)request.GetResponse();
         

@@ -34,9 +34,5 @@ public class Trigger : MonoBehaviour
                 }
             }
         }
-        else
-        {
-            Debug.Log("Steps or Picking Steps are null!");
-        }
     }
 }

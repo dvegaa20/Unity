@@ -221,8 +221,8 @@ class RappiDelivery(Model):
 
         self.spawn_food(self.num_food)
         self.spawn_deposit()
-        self.spawn_agents(3, Rappi, "Rappi")
-        self.spawn_agents(2, GoogleMaps, "GoogleMaps")
+        self.spawn_agents(2, Rappi, "Rappi")
+        self.spawn_agents(3, GoogleMaps, "GoogleMaps")
 
     def spawn_agents(self, num_agents, agent_class, prefix):
 
@@ -398,8 +398,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-# model = run_simulation()
-
-# anim = animate_simulation(model)
-# anim
