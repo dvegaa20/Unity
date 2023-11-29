@@ -23,13 +23,13 @@ public class FoodCount : MonoBehaviour
         {
             foodCount = GetActiveFoodCount();
             
-            if (foodCount >= 0)
+            if (foodCount>= 0)
             {
-                foodTextMesh.text = foodCount.ToString();
+                foodTextMesh.text = "Current Food: " + foodCount.ToString();
             }
             else
             {
-                foodTextMesh.text = "00";
+                foodTextMesh.text = "Current Food: 00";
             }
         }
     }

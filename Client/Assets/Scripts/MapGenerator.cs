@@ -13,13 +13,14 @@ public class MapGenerator : MonoBehaviour
     public GameObject deposit;
     private APIHelper apiHelper;
     public Transform Objects;
-    public TextMeshProUGUI stepTextMesh;
 
     [Header("Variables")]
     public float x;
     public float y;
     public float z;
     public Vector3 food_pos;
+    Vector3 spawnPosition;
+    Quaternion spawnRotation = Quaternion.Euler(-90f, 0f, 0f);
 
     void Start()
     {
@@ -32,9 +33,9 @@ public class MapGenerator : MonoBehaviour
 
         x = depositLocation.x;
         z = depositLocation.y;
+
+        spawnPosition = new Vector3(x * 10, y, z * 10);
         
-        Vector3 spawnPosition = new Vector3(x, y, z);
-        Quaternion spawnRotation = Quaternion.Euler(-90f, 0f, 0f);
         GameObject newDeposit = Instantiate(deposit, spawnPosition, spawnRotation, Objects);
 
         Step firstStep = steps[0];
@@ -65,18 +66,8 @@ public class MapGenerator : MonoBehaviour
             }
         }
 
-        foreach(Step step in steps){
-            foreach (Food food in step.food)
-            {
-                x = food.x;
-                z = food.y;
-                spawnPosition = new Vector3(x * 10, 0, z * 10);
-                spawnRotation = Quaternion.Euler(0f, 0f, 0f);
-                GameObject newFood = Instantiate(this.food, spawnPosition, spawnRotation, Objects);
-            }
-        }
-
         StartCoroutine(UpdateAgents(steps, pickingSteps));
+        StartCoroutine(SpawnFood(steps));
 
     }
 
@@ -85,7 +76,7 @@ public class MapGenerator : MonoBehaviour
         StepCountManager stepCountManager = FindObjectOfType<StepCountManager>();
         foreach (Step step in steps)
         {
-            yield return new WaitForSeconds(0.75f);
+            yield return new WaitForSeconds(1f);
             GameObject[] gos;
             foreach (Agent agent in step.agents)
             {
@@ -104,6 +95,23 @@ public class MapGenerator : MonoBehaviour
             int currentStep = stepCountManager.GetCurrentStepCount();
             Debug.Log("Step: " + currentStep);
             stepCountManager.IncrementStepCount();
+        }
+    }
+
+    IEnumerator SpawnFood(List<Step> steps){
+        foreach(Step step in steps){
+            if (step.id % 5 == 0)
+            {
+                yield return new WaitForSeconds(5f);
+                foreach (Food food in step.food)
+                {
+                    x = food.x;
+                    z = food.y;
+                    spawnPosition = new Vector3(x * 10, 0, z * 10);
+                    spawnRotation = Quaternion.Euler(0f, 0f, 0f);
+                    GameObject newFood = Instantiate(this.food, spawnPosition, spawnRotation, Objects);
+                }
+            }
         }
     }
 }
