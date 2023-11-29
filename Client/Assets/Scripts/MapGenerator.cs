@@ -82,10 +82,10 @@ public class MapGenerator : MonoBehaviour
 
     IEnumerator UpdateAgents(List<Step> steps, List<PickingSteps> pickingSteps)
     {
-        int step_count = 0;
+        StepCountManager stepCountManager = FindObjectOfType<StepCountManager>();
         foreach (Step step in steps)
         {
-            yield return new WaitForSeconds(0.25f);
+            yield return new WaitForSeconds(0.75f);
             GameObject[] gos;
             foreach (Agent agent in step.agents)
             {
@@ -101,8 +101,9 @@ public class MapGenerator : MonoBehaviour
                     Debug.Log("Error: Agent type not found");
                 }
             }
-            Debug.Log("Step: " + step_count);
-            step_count++;
+            int currentStep = stepCountManager.GetCurrentStepCount();
+            Debug.Log("Step: " + currentStep);
+            stepCountManager.IncrementStepCount();
         }
     }
 }

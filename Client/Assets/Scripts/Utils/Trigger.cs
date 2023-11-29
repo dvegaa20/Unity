@@ -20,23 +20,23 @@ public class Trigger : MonoBehaviour
     {
         if (steps != null && pickingSteps != null)
         {
-            int step_count = 0;
-
             foreach (Step step in steps)
             {
-                if (step_count == pickingSteps[0].step)
+                foreach (PickingSteps pickingStep in pickingSteps)
                 {
-                    if (other.gameObject.CompareTag("Food"))
+                    if (StepCountManager.Instance.GetCurrentStepCount() == pickingStep.step)
                     {
-                        Debug.Log("On Trigger Enter");
-                        Destroy(other.gameObject);
+                        if (other.gameObject.CompareTag("Food"))
+                        {
+                            Destroy(other.gameObject);
+                        }
                     }
                 }
-                step_count++;
             }
         }
         else
         {
-            Debug.Log("Steps or Picking Steps are null!");}
+            Debug.Log("Steps or Picking Steps are null!");
+        }
     }
 }
