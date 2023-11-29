@@ -10,10 +10,10 @@ TagManager:
   - Agent
   - Rappi0
   - Rappi1
-  - Rappi2
   - GoogleMaps0
   - GoogleMaps1
   - Food
+  - GoogleMaps2
   layers:
   - Default
   - TransparentFX
