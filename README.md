@@ -36,6 +36,6 @@ Los criterios que se utilizarán para evaluar sus soluciones y seleccionar a los
 
 ## Documentation
 
-[Documentation](https://linktodocumentation)
+[Documentation]([https://linktodocumentation](https://docs.google.com/document/d/1VNEHdnsAo_XaDkXb9i973FrY28pYC5Zkk57lRGtSOnU/edit?usp=sharing)https://docs.google.com/document/d/1VNEHdnsAo_XaDkXb9i973FrY28pYC5Zkk57lRGtSOnU/edit?usp=sharing)
 
 
